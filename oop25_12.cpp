@@ -1,125 +1,57 @@
 #include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
 
 
-class Matrix {
-private:
-    int rows;
-    int cols;
-    int** data;
-
-public:
+class Palindrome {
+    private:
+        string s; 
+    public:
     
-    Matrix(int rows, int cols) : rows(rows), cols(cols) {
-        
-        data = new int*[rows];
-        for (int i = 0; i < rows; ++i) {
-            data[i] = new int[cols];
+        Palindrome (string s) {
+            this->s = s;
         }
-    }
-
-    
-    ~Matrix() {
-        
-        for (int i = 0; i < rows; ++i) {
-            delete[] data[i];
-        }
-        delete[] data;
-    }
-
-    
-    Matrix operator+(const Matrix& other) const {
-        
-        log("Performing matrix addition");
 
         
-        Matrix result(rows, cols);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                result.data[i][j] = data[i][j] + other.data[i][j];
-            }
-        }
-        return result;
-    }
-
-    
-    Matrix operator-(const Matrix& other) const {
-        
-        log("Performing matrix subtraction");
-
-        
-        Matrix result(rows, cols);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                result.data[i][j] = data[i][j] - other.data[i][j];
-            }
-        }
-        return result;
-    }
-
-    
-    Matrix operator*(const Matrix& other) const {
-        log("Performing matrix multiplication");
-
-        Matrix result(rows, other.cols);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < other.cols; ++j) {
-                for (int k = 0; k < cols; ++k) {
-                    result.data[i][j] += data[i][k] * other.data[k][j];
+        int transform (char old, char moi) {
+            int cost = 0; 
+            for (int i = 0; i < s.length (); i++) {
+                if (s [i] == old) { 
+                    s [i] = moi; 
+                    cost++; 
                 }
             }
+            return cost; 
         }
-        return result;
-    }
 
-    Matrix operator/(const Matrix& other) const {
-        log("Performing matrix division");
+        
+        bool isPalindrome () {
+           
+            return s == string (s.rbegin (), s.rend ());
+        }
 
-        Matrix result(rows, cols);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                result.data[i][j] = data[i][j] / other.data[i][j];
+        
+        int minCost () {
+            int cost = 0; 
+            for (int i = 0; i < s.length () / 2; i++) {
+                
+                char c = s [s.length () - i - 1];
+
+                if (s [i] != c) {
+                    
+                    cost += transform (c, s [i]);
+                }
             }
+            return cost; 
         }
-        return result;
-    }
-
-    void log(const std::string& message) const {
-        std::cout << "[LOG] " << message << std::endl;
-    }
-
-    void inputMatrix() {
-        std::cout << "Enter matrix values:" << std::endl;
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                std::cout << "Matrix[" << i << "][" << j << "]: ";
-                std::cin >> data[i][j];
-            }
-        }
-    }
-
-    
-    void print() const {
-        for (int i = 0; i < rows; ++i) {
-        	for (int j = 0; j < cols; ++j) {
-                std::cout << data[i][j] << ' ';
-            }
-            std::cout << std::endl;
-        }
-    }
 };
 
-int main() {
-    
-    Matrix matrix1(2, 2);
-    matrix1.inputMatrix();
 
-    Matrix matrix2(2, 2);
-    matrix2.inputMatrix();
-
-    (matrix1 + matrix2).print();
-    (matrix1 - matrix2).print();
-    (matrix1 * matrix2).print();
-    (matrix1 / matrix2).print();
-
+int main () {
+    string s; 
+    cin >> s; 
+    Palindrome p (s);
+    cout << p.minCost () << endl; 
     return 0;
 }
